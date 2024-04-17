@@ -10,7 +10,8 @@ public class MainServer {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        MultiServer server=new MultiServer(1789);
+        server.start();
     }
     
 }

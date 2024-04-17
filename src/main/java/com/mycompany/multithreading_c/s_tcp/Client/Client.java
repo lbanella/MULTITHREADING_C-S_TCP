@@ -1,11 +1,15 @@
 package com.mycompany.multithreading_c.s_tcp.Client;
 
 
+import com.mycompany.multithreading_c.s_tcp.Server.ServerThread;
 import java.io.*;
+import static java.lang.Thread.sleep;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -13,7 +17,7 @@ import java.util.Scanner;
  * @author Banella Lorenzo
  */
 
- public class Client extends Thread{
+ public class Client{
 
     private String nome;
     private String colore;
@@ -51,20 +55,19 @@ import java.util.Scanner;
 
     public void comunica() {
         while (socket != null && !socket.isClosed()) {
-            scrivi();
-            leggi();
+                scrivi();
+                leggi();
+               
+          
         }
     }
     
     
-    @Override
-    public void run() {
-      comunica();
-    }
+   
 
     public void scrivi() {
         if (socket != null && !socket.isClosed()) {
-            System.out.println(colore+"Scrivi :"+RESET);
+            System.out.println(colore+"Scrivi al server :"+RESET);
             String messaggio = scanner.nextLine();
             System.out.println(colore+"Messaggio inviato al server  : "+messaggio+RESET);
             try {
