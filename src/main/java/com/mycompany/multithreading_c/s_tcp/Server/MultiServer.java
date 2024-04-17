@@ -15,10 +15,11 @@ import java.util.logging.Logger;
  * @author Banella Lorenzo
  */
 public class MultiServer  {
-    private ArrayList<Socket> clientConnessi;
+    private ArrayList<ServerThread> clientConnessi;
     private  int clientCheSiSonoCollegati;
     private   ServerSocket serverSocket;
     private  int porta;
+   
   
 
 
@@ -29,6 +30,7 @@ public class MultiServer  {
         try {
             this.serverSocket=new ServerSocket(this.porta);
             System.out.println("Il server è in ascolto sulla porta : "+this.porta);
+           
         } catch(BindException ex){
             System.err.println("Porta gia in uso");
             System.err.println(ex.getMessage());
@@ -37,7 +39,7 @@ public class MultiServer  {
         }
     }
     
-    public  Socket attendi() {
+    public Socket attendi() {
         try {
             return serverSocket.accept();
         }
@@ -57,26 +59,31 @@ public class MultiServer  {
         }
     }
 
+   
+
     public void start(){
         while(true){
-            if(clientConnessi.size()==0){
-                System.out.println("0 client connessi ");
-            }else{
+           if (clientConnessi.size()==1) {
+                System.out.println("1 client connesso ");
+            }
+            else{
                 System.out.println(clientConnessi.size()+" client connessi ");
             }
 
             Socket socket= this.attendi();
-            clientCheSiSonoCollegati++;
-            clientConnessi.add(socket);
-            System.out.println("Connessione stabilita con il Client "+clientCheSiSonoCollegati );
-            ServerThread serverThread=new ServerThread(socket,clientCheSiSonoCollegati);
+            
+           
+            ServerThread serverThread=new ServerThread(socket);
+            
+            clientConnessi.add(serverThread);
+            
             serverThread.start();
 
             
-            Iterator<Socket> iterator = clientConnessi.iterator();
+            Iterator<ServerThread> iterator = clientConnessi.iterator();
             while (iterator.hasNext()) {
-                Socket s = iterator.next();
-                if (s.isClosed()) {
+                ServerThread s = iterator.next();
+                if (s.getSocket().isClosed()) {
                     iterator.remove();
                 }
             }

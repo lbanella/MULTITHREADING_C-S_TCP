@@ -1,15 +1,14 @@
 package com.mycompany.multithreading_c.s_tcp.Client;
 
 
-import com.mycompany.multithreading_c.s_tcp.Server.ServerThread;
+
 import java.io.*;
-import static java.lang.Thread.sleep;
+
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 /**
@@ -25,18 +24,22 @@ import java.util.logging.Logger;
     private BufferedReader input;
     private BufferedWriter output;
     private Scanner scanner;
+  
+
     private static final String RESET = "\u001B[0m";
 
-    public Client(String nomeDefault, String coloreDefault) {
-        this.nome = nomeDefault;
-        this.colore = coloreDefault;
-        this.scanner = new Scanner(System.in);
+    public Client(String nome,String colore) {
+        this.nome=nome;
+        this.colore=colore;
+       this.scanner=new Scanner(System.in);
     }
 
+
     public void connetti(String nomeServer, int portaServer) {
-        System.out.println(colore+"Client " + nome + " in esecuzione"+RESET);
         try {
             this.socket = new Socket(nomeServer, portaServer);
+           
+            System.out.println(colore+"Client " + nome + " in esecuzione"+RESET);
             output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println(colore+"Connessione avvenuta con il server"+RESET);
@@ -53,12 +56,38 @@ import java.util.logging.Logger;
     }
     
 
-    public void comunica() {
+    public  void comunica() {
+        comunicaNome();
+        comunicaColore();
+        
+
         while (socket != null && !socket.isClosed()) {
                 scrivi();
                 leggi();
-               
-          
+        }
+    }
+
+    public void comunicaNome() {
+        if (socket != null && !socket.isClosed()) {
+            try {
+                output.write(nome);
+                output.newLine();
+                output.flush();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+
+    public void comunicaColore() {
+        if (socket != null && !socket.isClosed()) {
+            try {
+                output.write(colore);
+                output.newLine();
+                output.flush();
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
         }
     }
     
